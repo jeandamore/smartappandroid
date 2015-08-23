@@ -26,17 +26,8 @@ export 'PATH=$PATH:$ANDROID_HOME/bin:$ANDROID_HOME/tools' >> ~/.zshrc
 adb devices
 ```
 
-*Build the App*
+*Build, install and run the App*
 ```
-./gradlew assembleDebug
-```
-
-*Install the App* (on real devices pluuged throuht USB - could not make it work with an AVD)
-```
-adb install -r app/build/outputs/apk/app-debug.apk 
-```
-
-*Start the App*  (on real devices pluuged throuht USB - could not make it work with an AVD)
-```
-adb shell am start -n com.thoughtworks.jdamore.androidfirst/com.thoughtworks.jdamore.androidfirst.FirstActivity
+chmod +x ./go.sh
+./go.sh
 ```

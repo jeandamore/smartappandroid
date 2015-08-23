@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AndroidFirst</string>
-
     <string name="hello_world">Hello world Again!</string>
     <string name="action_settings">Settings</string>
 </resources>

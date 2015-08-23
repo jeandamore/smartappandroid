@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class FirstActivity extends AppCompatActivity {
 
@@ -11,6 +12,10 @@ public class FirstActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
+
+        TextView t=(TextView)findViewById(R.id.thetext);
+        t.setText("Step One: blast egg");
+
     }
 
     @Override
