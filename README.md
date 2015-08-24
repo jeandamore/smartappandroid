@@ -10,9 +10,9 @@ brew install android-sdk
 
 *Setup your environment (ZSH)*
 ```
-echo 'export STUDIO_JDK=/Library/Java/JavaVirtualMachines/jdk1.8.0_51.jdk' >> ~/.zshrc
-export 'ANDROID_HOME=/usr/local/opt/android-sdk' >> ~/.zshrc
-export 'PATH=$PATH:$ANDROID_HOME/bin:$ANDROID_HOME/tools' >> ~/.zshrc
+echo 'export STUDIO_JDK=/Library/Java/JavaVirtualMachines/<your_jdk>' >> ~/.zshrc
+echo 'export ANDROID_HOME=/Users/<you>/Library/Android/sdk' >> ~/.zshrc
+echo 'export PATH=$ANDROID_HOME/bin:$ANDROID_HOME/tools:$PATH' >> ~/.zshrc
 ```
 
 **Install and run the app**
