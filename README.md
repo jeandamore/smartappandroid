@@ -33,6 +33,8 @@ chmod +x ./go.sh
 ```
 It will compile the app, install it on your device, and run it
 
+Note - if you receive this error: "Failure [INSTALL_PARSE_FAILED_INCONSISTENT_CERTIFICATES]" you will need to ask JR or Sarah for their signing key and replace yours with it. It is located in the debug.keystore file in the ~/.android directory. 
+
 *On the emulator*
 
 1. To create a new Android Virtual Device (AVD), you need to launch the AVD manager
