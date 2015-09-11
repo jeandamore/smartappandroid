@@ -66,6 +66,8 @@ public class BluetoothLeService extends Service {
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
 
+    public final static UUID UUID_FATIGUE_LEVEL = UUID.fromString(SampleGattAttributes.FATIGUE_LEVEL);
+
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -128,6 +130,9 @@ public class BluetoothLeService extends Service {
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
         if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
+            byte[] value = characteristic.getValue();
+            Log.d(TAG, String.format("Heart rate flag: %d", flag));
+            //Log.d(TAG, String.format("Heart rate value: %s", value.toString()));
             int format = -1;
             if ((flag & 0x01) != 0) {
                 format = BluetoothGattCharacteristic.FORMAT_UINT16;
@@ -139,6 +144,21 @@ public class BluetoothLeService extends Service {
             final int heartRate = characteristic.getIntValue(format, 1);
             Log.d(TAG, String.format("Received heart rate: %d", heartRate));
             intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
+        } else if (UUID_FATIGUE_LEVEL.equals(characteristic.getUuid())) {
+            int flag = characteristic.getProperties();
+            Log.d(TAG, String.format("Fatigue level flag: %d", flag));
+            Log.d(TAG, String.format("Fatigue level value: %s", characteristic.getValue().toString()));
+            int format = -1;
+            if ((flag & 0x01) != 0) {
+                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+                Log.d(TAG, "Fatigue level format UINT16.");
+            } else {
+                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+                Log.d(TAG, "Fatigue level format UINT8.");
+            }
+            final int fatigueLevel = characteristic.getIntValue(format, 1);
+            Log.d(TAG, String.format("Received fatigue level: %d", fatigueLevel));
+            intent.putExtra(EXTRA_DATA, String.valueOf(fatigueLevel));
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();

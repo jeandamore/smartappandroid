@@ -25,14 +25,20 @@ public class SampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
+    public static String BODY_SENSOR_LOCATION = "00002a38-0000-1000-8000-00805f9b34fb";
+    public static String FATIGUE_LEVEL_SERVICE = "00001111-0000-1000-8000-00805f9b34fb";
+    public static String FATIGUE_LEVEL = "00002222-0000-1000-8000-00805f9b34fb";
 
     static {
         // Sample Services.
         attributes.put("0000180d-0000-1000-8000-00805f9b34fb", "Heart Rate Service");
         attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Device Information Service");
+        attributes.put(FATIGUE_LEVEL_SERVICE, "Fatigue Service");
         // Sample Characteristics.
         attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
+        attributes.put(BODY_SENSOR_LOCATION, "Body Sensor Location");
         attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
+        attributes.put(FATIGUE_LEVEL, "Fatigue Level");
     }
 
     public static String lookup(String uuid, String defaultName) {

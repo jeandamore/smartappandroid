@@ -237,6 +237,13 @@ public class DeviceControlActivity extends Activity {
 
     private void displayData(String data) {
         if (data != null) {
+            if(data.equals("2")) {
+                setContentView(R.layout.happy_face);
+            } else if (data.equals("3")) {
+                setContentView(R.layout.normal_face);
+            } else if (data.equals("4")) {
+                setContentView(R.layout.tired_face);
+            }
             mDataField.setText(data);
         }
     }
