@@ -61,3 +61,10 @@ chmod +x ./go-avd.sh
 ```
 For instance: ./go-avd.sh Nexus_9.
 It will compile the app, start the emulator with the specified AVD, wait 60 seconds, install the app, and run it
+
+*Running the app and transmitting data via the Light Blue LE app*
+In order to transmit bluetooth signals to the app, install the Light Blue LE app (available on the app store or at this link: https://goo.gl/zfASIs). Add a new Blank virtual peripheral by pressing the plus icon at the top right. This can be renamed to "Fatigue Monitor" if you wish. Make sure it is selected and it will appear when scanning for devices with the android app. After a couple of seconds, the services should appear. Click on the peripheral in the Light Blue app and click on the lowest item on the page, titled "0x2222" for the Blank peripheral. Where it says "No value" you can edit the value with a hexadecimal number that will be converted to an integer in the "Data: " part of the android app. You will need to use the format 0x0002 to transfer a value of 2. The emoticons will appear corresponding to the following values:
+
+2 - happy face
+3 - normal face
+4 - tired face (danger) 
