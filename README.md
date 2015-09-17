@@ -68,3 +68,6 @@ In order to transmit bluetooth signals to the app, install the Light Blue LE app
 2 - happy face
 3 - normal face
 4 - tired face (danger) 
+
+*Latest Update*
+The app now only looks for the fatigue monitor, connects automatically to it, and displays the emoticons automatically according to the data passed to it. No clicks are necessary. To re-read the data, go back to the main screen and it will check the updated level. 
