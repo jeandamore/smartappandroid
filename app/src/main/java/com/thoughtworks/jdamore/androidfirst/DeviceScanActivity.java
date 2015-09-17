@@ -35,7 +35,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.util.Log;
+import java.util.UUID;
 import java.util.ArrayList;
 
 /**
@@ -158,7 +159,25 @@ public class DeviceScanActivity extends ListActivity {
         startActivity(intent);
     }
 
+    public void scanFatigueDevice() {
+
+        if(mLeDeviceListAdapter.getCount() != 0) {
+            final BluetoothDevice device = mLeDeviceListAdapter.getDevice(0);
+            if (device == null) return;
+            final Intent intent = new Intent(this, DeviceControlActivity.class);
+            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+            if (mScanning) {
+                mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                mScanning = false;
+            }
+            startActivity(intent);
+        }
+    }
+
     private void scanLeDevice(final boolean enable) {
+        UUID fatigueMonitorUUID = UUID.fromString(SampleGattAttributes.FATIGUE_LEVEL_SERVICE);
+        UUID[] serviceUUIDs = { fatigueMonitorUUID };
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -171,7 +190,8 @@ public class DeviceScanActivity extends ListActivity {
             }, SCAN_PERIOD);
 
             mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            mBluetoothAdapter.startLeScan(serviceUUIDs, mLeScanCallback);
+
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
@@ -235,6 +255,7 @@ public class DeviceScanActivity extends ListActivity {
 
             BluetoothDevice device = mLeDevices.get(i);
             final String deviceName = device.getName();
+
             if (deviceName != null && deviceName.length() > 0)
                 viewHolder.deviceName.setText(deviceName);
             else
@@ -256,8 +277,10 @@ public class DeviceScanActivity extends ListActivity {
                 public void run() {
                     mLeDeviceListAdapter.addDevice(device);
                     mLeDeviceListAdapter.notifyDataSetChanged();
+                    scanFatigueDevice();
                 }
             });
+
         }
     };
 

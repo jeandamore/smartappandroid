@@ -313,8 +313,11 @@ public class DeviceControlActivity extends Activity {
 
     private void readFatigueLevelCharacteristic() {
             if (mGattCharacteristics != null) {
+                // This connects it to the Fatigue Service characteristic. It is usually the 8th item
+                // in the list but sometimes this changes, which will cause it to connect to the
+                // wrong characteristic.
                 final BluetoothGattCharacteristic characteristic =
-                        mGattCharacteristics.get(3).get(0);
+                        mGattCharacteristics.get(7).get(0);
                 final int charaProp = characteristic.getProperties();
                 if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                     // If there is an active notification on a characteristic, clear
