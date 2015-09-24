@@ -107,6 +107,7 @@ public class DeviceControlActivity extends Activity {
                 clearUI();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
+                Log.d(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
@@ -165,7 +166,7 @@ public class DeviceControlActivity extends Activity {
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
 
         // Sets up UI references.
-        ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
+                ((TextView) findViewById(R.id.device_address)).setText(mDeviceAddress);
         mGattServicesList = (ExpandableListView) findViewById(R.id.gatt_services_list);
         mGattServicesList.setOnChildClickListener(servicesListClickListener);
         mConnectionState = (TextView) findViewById(R.id.connection_state);
@@ -241,13 +242,9 @@ public class DeviceControlActivity extends Activity {
 
     private void displayData(String data) {
         if (data != null) {
-            if(data.equals("2")) {
-                setContentView(R.layout.happy_face);
-            } else if (data.equals("3")) {
-                setContentView(R.layout.normal_face);
-            } else if (data.equals("4")) {
-                setContentView(R.layout.tired_face);
-            }
+            final Intent intent = new Intent(this, EmoticonActivity.class);
+            intent.putExtra(EmoticonActivity.EXTRAS_FATIGUE_LEVEL, data);
+            startActivity(intent);
             mDataField.setText(data);
         }
     }
@@ -313,11 +310,9 @@ public class DeviceControlActivity extends Activity {
 
     private void readFatigueLevelCharacteristic() {
             if (mGattCharacteristics != null) {
-                // This connects it to the Fatigue Service characteristic. It is usually the 8th item
-                // in the list but sometimes this changes, which will cause it to connect to the
-                // wrong characteristic.
-                final BluetoothGattCharacteristic characteristic =
-                        mGattCharacteristics.get(7).get(0);
+                // Connects to the Fatigue Service characteristic.
+                final BluetoothGattCharacteristic characteristic = getGattCharacteristic(SampleGattAttributes.FATIGUE_LEVEL, mGattCharacteristics);
+
                 final int charaProp = characteristic.getProperties();
                 if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                     // If there is an active notification on a characteristic, clear
@@ -335,6 +330,17 @@ public class DeviceControlActivity extends Activity {
                             characteristic, true);
                 }
             }
+    }
+
+    private BluetoothGattCharacteristic getGattCharacteristic(String characteristicUUID, ArrayList<ArrayList<BluetoothGattCharacteristic>> characteristicList) {
+        for(int i = 0; i < characteristicList.size(); i++) {
+            BluetoothGattCharacteristic currentCharacteristic = characteristicList.get(i).get(0);
+            Log.d(TAG, "wooo" + currentCharacteristic.getUuid().toString());
+            if(currentCharacteristic.getUuid().toString().equals(characteristicUUID)) {
+                return currentCharacteristic;
+            }
+        }
+        return null;
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {

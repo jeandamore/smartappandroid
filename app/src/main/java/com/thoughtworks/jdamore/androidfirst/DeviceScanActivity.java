@@ -35,7 +35,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.util.Log;
 import java.util.UUID;
 import java.util.ArrayList;
 
