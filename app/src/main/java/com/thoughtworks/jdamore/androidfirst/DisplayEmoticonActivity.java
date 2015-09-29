@@ -9,9 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.text.Layout;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,9 +91,6 @@ public class DisplayEmoticonActivity extends Activity {
             final BluetoothGattCharacteristic characteristic = getGattCharacteristic(SampleGattAttributes.FATIGUE_LEVEL, mGattCharacteristics);
 
             final int charaProp = characteristic.getProperties();
-            Log.d(TAG, "333 charaProp" + characteristic.getProperties());
-            Log.d(TAG, "333" + (charaProp & BluetoothGattCharacteristic.PROPERTY_READ));
-            Log.d(TAG, "333 BluetoothGattCharacteristic.PROPERTY_READ" + BluetoothGattCharacteristic.PROPERTY_READ);
             if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                 // If there is an active notification on a characteristic, clear
                 // it first so it doesn't update the data field on the user interface.
@@ -164,6 +161,19 @@ public class DisplayEmoticonActivity extends Activity {
                 case "4":
                     setContentView(R.layout.tired_face);
                     currentLayout = (FrameLayout) findViewById(R.id.tired_face);
+                    final MediaPlayer mpBeep = MediaPlayer.create(getApplicationContext(), R.raw.beep_01a);
+                    final MediaPlayer mpVoice = MediaPlayer.create(getApplicationContext(), R.raw.voice);
+                    mpBeep.setVolume(0.2f, 0.2f);
+                    mpBeep.setNextMediaPlayer(mpVoice);
+                    mpVoice.setVolume(1.0f, 1.0f);
+                    mpVoice.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            mpBeep.release();
+                            mpVoice.release();
+                        }
+                    });
+                    mpBeep.start();
                     break;
                 default:
                     finish();
