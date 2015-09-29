@@ -28,12 +28,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DeviceControlActivity"
-            android:screenOrientation="landscape"/>
-        <activity
-            android:name=".EmoticonActivity"
+            android:name=".DisplayEmoticonActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar"/>
+        <!--<activity-->
+            <!--android:name=".EmoticonActivity"-->
+            <!--android:screenOrientation="landscape"-->
+            <!--android:theme="@android:style/Theme.NoTitleBar"-->
+            <!--android:launchMode="singleInstance"/>-->
         <service android:name=".BluetoothLeService" android:enabled="true"/>
     </application>
 

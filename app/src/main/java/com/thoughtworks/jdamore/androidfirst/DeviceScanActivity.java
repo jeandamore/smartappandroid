@@ -148,9 +148,9 @@ public class DeviceScanActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
-        final Intent intent = new Intent(this, DeviceControlActivity.class);
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+        final Intent intent = new Intent(this, DisplayEmoticonActivity.class);
+        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_NAME, device.getName());
+        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
@@ -163,9 +163,9 @@ public class DeviceScanActivity extends ListActivity {
         if(mLeDeviceListAdapter.getCount() != 0) {
             final BluetoothDevice device = mLeDeviceListAdapter.getDevice(0);
             if (device == null) return;
-            final Intent intent = new Intent(this, DeviceControlActivity.class);
-            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_NAME, device.getName());
-            intent.putExtra(DeviceControlActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+            final Intent intent = new Intent(this, DisplayEmoticonActivity.class);
+            intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_NAME, device.getName());
+            intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
             if (mScanning) {
                 mBluetoothAdapter.stopLeScan(mLeScanCallback);
                 mScanning = false;
