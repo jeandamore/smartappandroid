@@ -7,8 +7,8 @@
 
     <ImageView
         android:src="@drawable/tired_face"
-        android:scaleType="fitCenter"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:scaleType="centerCrop"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"/>
 
 </FrameLayout>

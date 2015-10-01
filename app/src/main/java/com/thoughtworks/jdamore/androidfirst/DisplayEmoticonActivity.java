@@ -30,7 +30,7 @@ public class DisplayEmoticonActivity extends Activity {
     private BluetoothLeService mBluetoothLeService;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
-    private boolean mConnected = false;
+    //private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final String LIST_NAME = "NAME";
@@ -70,9 +70,9 @@ public class DisplayEmoticonActivity extends Activity {
             final String action = intent.getAction();
             Log.d(TAG, "broadcastreceiverCalled");
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
+                //mConnected = true;
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                mConnected = false;
+                //mConnected = false;
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 Log.d(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
@@ -112,8 +112,8 @@ public class DisplayEmoticonActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.no_cap_connected);
-        currentLayout = (FrameLayout) findViewById(R.id.no_cap_connected);
+        setContentView(R.layout.connecting);
+        currentLayout = (FrameLayout) findViewById(R.id.connecting);
 
         setOnTouchListenerForLayout(currentLayout);
 
@@ -161,9 +161,9 @@ public class DisplayEmoticonActivity extends Activity {
                 case "4":
                     setContentView(R.layout.tired_face);
                     currentLayout = (FrameLayout) findViewById(R.id.tired_face);
-                    final MediaPlayer mpBeep = MediaPlayer.create(getApplicationContext(), R.raw.beep_01a);
+                    final MediaPlayer mpBeep = MediaPlayer.create(getApplicationContext(), R.raw.screaming_goat);
                     final MediaPlayer mpVoice = MediaPlayer.create(getApplicationContext(), R.raw.voice);
-                    mpBeep.setVolume(0.2f, 0.2f);
+                    mpBeep.setVolume(0.5f, 0.5f);
                     mpBeep.setNextMediaPlayer(mpVoice);
                     mpVoice.setVolume(1.0f, 1.0f);
                     mpVoice.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -174,6 +174,10 @@ public class DisplayEmoticonActivity extends Activity {
                         }
                     });
                     mpBeep.start();
+                    break;
+                case "5":
+                    setContentView(R.layout.normal_face);
+                    currentLayout = (FrameLayout) findViewById(R.id.normal_face);
                     break;
                 default:
                     finish();
@@ -230,7 +234,6 @@ public class DisplayEmoticonActivity extends Activity {
     private BluetoothGattCharacteristic getGattCharacteristic(String characteristicUUID, ArrayList<ArrayList<BluetoothGattCharacteristic>> characteristicList) {
         for(int i = 0; i < characteristicList.size(); i++) {
             BluetoothGattCharacteristic currentCharacteristic = characteristicList.get(i).get(0);
-            Log.d(TAG, "wooo" + currentCharacteristic.getUuid().toString());
             if(currentCharacteristic.getUuid().toString().equals(characteristicUUID)) {
                 return currentCharacteristic;
             }

@@ -106,6 +106,7 @@ public class BluetoothLeService extends Service {
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                Log.d(TAG, "READ1111" + characteristic);
             }
         }
 
