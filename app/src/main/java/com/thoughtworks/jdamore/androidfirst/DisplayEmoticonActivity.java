@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,13 +32,14 @@ public class DisplayEmoticonActivity extends Activity {
     private BluetoothLeService mBluetoothLeService;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
-    //private boolean mConnected = false;
+    private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
 
     public static FrameLayout currentLayout;
+    public static RelativeLayout connectingLayout;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -55,6 +58,7 @@ public class DisplayEmoticonActivity extends Activity {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mBluetoothLeService = null;
+            finish();
         }
     };
 
@@ -70,16 +74,23 @@ public class DisplayEmoticonActivity extends Activity {
             final String action = intent.getAction();
             Log.d(TAG, "broadcastreceiverCalled");
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                //mConnected = true;
+//                if(DeviceScanActivity.ismScanning()) {
+//                    setContentView(R.layout.connecting);
+//                    connectingLayout = (RelativeLayout) findViewById(R.id.connecting);
+//                    setOnTouchListenerForLayout(connectingLayout);
+//                } else {
+//                    finish();
+//                }
+                mConnected = true;
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                //mConnected = false;
+                finish();
+                mConnected = false;
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface.
                 Log.d(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
                 setGattServices(mBluetoothLeService.getSupportedGattServices());
                 readFatigueLevelCharacteristic();
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Log.d(TAG, "characteristic changed woho");
                 setView(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
@@ -112,10 +123,6 @@ public class DisplayEmoticonActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.connecting);
-        currentLayout = (FrameLayout) findViewById(R.id.connecting);
-
-        setOnTouchListenerForLayout(currentLayout);
 
         final Intent intent = getIntent();
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
@@ -150,6 +157,7 @@ public class DisplayEmoticonActivity extends Activity {
     private void setView(String data) {
         if(data != null) {
             switch (data) {
+                //Hexadecimal 0002
                 case "2":
                     setContentView(R.layout.happy_face);
                     currentLayout = (FrameLayout) findViewById(R.id.happy_face);
@@ -163,7 +171,7 @@ public class DisplayEmoticonActivity extends Activity {
                     currentLayout = (FrameLayout) findViewById(R.id.tired_face);
                     final MediaPlayer mpBeep = MediaPlayer.create(getApplicationContext(), R.raw.screaming_goat);
                     final MediaPlayer mpVoice = MediaPlayer.create(getApplicationContext(), R.raw.voice);
-                    mpBeep.setVolume(0.5f, 0.5f);
+                    mpBeep.setVolume(0.8f, 0.8f);
                     mpBeep.setNextMediaPlayer(mpVoice);
                     mpVoice.setVolume(1.0f, 1.0f);
                     mpVoice.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -176,8 +184,23 @@ public class DisplayEmoticonActivity extends Activity {
                     mpBeep.start();
                     break;
                 case "5":
-                    setContentView(R.layout.normal_face);
-                    currentLayout = (FrameLayout) findViewById(R.id.normal_face);
+                    setContentView(R.layout.no_cap_connected);
+                    break;
+                case "6":
+                    setContentView(R.layout.poorly_fitted_cap);
+                    break;
+                case "7":
+                    setContentView(R.layout.no_comms);
+                    break;
+                case "8":
+                    setContentView(R.layout.offline);
+                    break;
+                case "9":
+                    setContentView(R.layout.unassigned);
+                    break;
+                //Hexadecimal 000A
+                case "10":
+                    setContentView(R.layout.cap_off);
                     break;
                 default:
                     finish();
@@ -248,6 +271,17 @@ public class DisplayEmoticonActivity extends Activity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    private void setOnTouchListenerForLayout(RelativeLayout layout) {
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                Log.d(TAG, "onTouch yay");
+                finish();
+                return true;//always return true to consume event
+            }
+        });
     }
 
     private void setOnTouchListenerForLayout(FrameLayout layout) {

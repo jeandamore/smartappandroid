@@ -63,9 +63,6 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
 
-    public final static UUID UUID_HEART_RATE_MEASUREMENT =
-            UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
-
     public final static UUID UUID_FATIGUE_LEVEL = UUID.fromString(SampleGattAttributes.FATIGUE_LEVEL);
 
     // Implements callback methods for GATT events that the app cares about.  For example,

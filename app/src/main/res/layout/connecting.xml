@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:screenOrientation="landscape"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/connecting"
     android:clickable="true"
     android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="#e0021a">
 
-    <ImageView
-        android:src="@drawable/connecting"
-        android:scaleType="centerCrop"
-        android:layout_height="fill_parent"
-        android:layout_width="fill_parent"/>
-</FrameLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="SMART CAP"
+        android:textSize="50sp"
+        android:textColor="#ffffff"
+        android:id="@+id/smartCapText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="68dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connecting to cap..."
+        android:textSize="30sp"
+        android:textColor="#ffffff"
+        android:background="#07ffffff"
+        android:id="@+id/connectingText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"/>
+</RelativeLayout>
