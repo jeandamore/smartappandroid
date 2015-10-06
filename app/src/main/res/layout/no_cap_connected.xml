@@ -10,7 +10,7 @@
 
     <ImageView
         android:src="@drawable/no_cap_connected"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>
 </FrameLayout>
