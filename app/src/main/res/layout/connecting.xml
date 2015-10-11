@@ -32,4 +32,13 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"/>
+
+    <RelativeLayout
+        android:id="@+id/incrementingBoxAnimation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/connectingText" >
+
+        <include layout="@layout/loading_animation" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -24,10 +24,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,22 +44,36 @@ import java.util.UUID;
  */
 public class DeviceScanActivity extends Activity {
 
+    private final static String TAG = DisplayEmoticonActivity.class.getSimpleName();
+
     //    private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
-    private static boolean mScanning;
+    private boolean mScanning;
     private Handler mHandler;
     private BluetoothDevice mLeDevice;
+    private ArrayList<BluetoothDevice> mLeDevices;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
 
+//    private ImageView incrementingBoxView;
+//    private AnimationDrawable myAnimationDrawable;
+
+    public static RelativeLayout connectingLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getActionBar().setTitle(R.string.title_devices);
+        mLeDevices = new ArrayList<BluetoothDevice>();
         mHandler = new Handler();
+
         setContentView(R.layout.connecting);
+
+        connectingLayout = (RelativeLayout) findViewById(R.id.connecting);
+        setOnTouchListenerForLayout(connectingLayout);
+
         Typeface futuraFont = Typeface.createFromAsset(getAssets(),
                 "fonts/Futura.ttc");
         Typeface myriadFont = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro_Regular.otf");
@@ -59,6 +82,10 @@ public class DeviceScanActivity extends Activity {
         TextView connectingText = (TextView) findViewById(R.id.connectingText);
         smartCapTextView.setTypeface(futuraFont);
         connectingText.setTypeface(myriadFont);
+
+//        incrementingBoxView = (ImageView) findViewById(R.id.incrementingBoxView);
+//        incrementingBoxView.setVisibility(View.VISIBLE);
+//        incrementalHorizontalLoading();
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -92,9 +119,6 @@ public class DeviceScanActivity extends Activity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        // Initializes list view adapter.
-        //mLeDeviceListAdapter = new LeDeviceListAdapter();
-        //setListAdapter(mLeDeviceListAdapter);
         scanLeDevice(true);
     }
 
@@ -136,14 +160,14 @@ public class DeviceScanActivity extends Activity {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             finish();
         }
-//        invalidateOptionsMenu();
     }
 
     public void connectToFatigueDevice() {
-        if (mLeDevice == null) return;
+        if (mLeDevices == null) return;
         final Intent intent = new Intent(this, DisplayEmoticonActivity.class);
-        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_NAME, mLeDevice.getName());
-        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_ADDRESS, mLeDevice.getAddress());
+        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_NAME, mLeDevices.get(0).getName());
+        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_ADDRESS, mLeDevices.get(0).getAddress());
+        //Log.d(TAG, "address22222" + mLeDevice.getAddress());
         if (mScanning) {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
             mScanning = false;
@@ -160,137 +184,30 @@ public class DeviceScanActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                mLeDevice = device;
-//              mLeDeviceListAdapter.addDevice(device);
-//              mLeDeviceListAdapter.notifyDataSetChanged();
-                connectToFatigueDevice();
+                    Log.d(TAG, "42940236 mLeDevices.add(device)");
+                    mLeDevices.clear();
+                    mLeDevices.add(device);
+
+                    connectToFatigueDevice();
                 }
             });
 
         }
     };
 
-    public static boolean ismScanning() {
-        if(mScanning) {
-            return true;
-        } else {
-            return false;
-        }
+//    public void incrementalHorizontalLoading() {
+//        myAnimationDrawable = (AnimationDrawable) incrementingBoxView.getDrawable();
+//
+//        myAnimationDrawable.start();
+//    }
+
+    private void setOnTouchListenerForLayout(RelativeLayout layout) {
+        layout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View arg0, MotionEvent arg1) {
+                finish();
+                return true;//always return true to consume event
+            }
+        });
     }
-
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        if (!mScanning) {
-//            menu.findItem(R.id.menu_stop).setVisible(false);
-//            menu.findItem(R.id.menu_scan).setVisible(true);
-//            menu.findItem(R.id.menu_refresh).setActionView(null);
-//        } else {
-//            menu.findItem(R.id.menu_stop).setVisible(true);
-//            menu.findItem(R.id.menu_scan).setVisible(false);
-//            menu.findItem(R.id.menu_refresh).setActionView(
-//                    R.layout.actionbar_indeterminate_progress);
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.menu_scan:
-//                mLeDeviceListAdapter.clear();
-//                scanLeDevice(true);
-//                break;
-//            case R.id.menu_stop:
-//                scanLeDevice(false);
-//                break;
-//        }
-//        return true;
-//    }
-
-//    static class ViewHolder {
-//        TextView deviceName;
-//        TextView deviceAddress;
-//    }
-
-    // Adapter for holding devices found through scanning.
-//    private class LeDeviceListAdapter extends BaseAdapter {
-//        private ArrayList<BluetoothDevice> mLeDevices;
-//        private LayoutInflater mInflator;
-//
-//        public LeDeviceListAdapter() {
-//            super();
-//            mLeDevices = new ArrayList<BluetoothDevice>();
-//            mInflator = DeviceScanActivity.this.getLayoutInflater();
-//        }
-//
-//        public void addDevice(BluetoothDevice device) {
-//            if(!mLeDevices.contains(device)) {
-//                mLeDevices.add(device);
-//            }
-//        }
-//
-//        public BluetoothDevice getDevice(int position) {
-//            return mLeDevices.get(position);
-//        }
-//
-//        public void clear() {
-//            mLeDevices.clear();
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return mLeDevices.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int i) {
-//            return mLeDevices.get(i);
-//        }
-//
-//        @Override
-//        public long getItemId(int i) {
-//            return i;
-//        }
-//
-//        @Override
-//        public View getView(int i, View view, ViewGroup viewGroup) {
-//            ViewHolder viewHolder;
-//            // General ListView optimization code.
-//            if (view == null) {
-//                view = mInflator.inflate(R.layout.listitem_device, null);
-//                viewHolder = new ViewHolder();
-//                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
-//                viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
-//                view.setTag(viewHolder);
-//            } else {
-//                viewHolder = (ViewHolder) view.getTag();
-//            }
-//
-//            BluetoothDevice device = mLeDevices.get(i);
-//            final String deviceName = device.getName();
-//
-//            if (deviceName != null && deviceName.length() > 0)
-//                viewHolder.deviceName.setText(deviceName);
-//            else
-//                viewHolder.deviceName.setText(R.string.unknown_device);
-//            viewHolder.deviceAddress.setText(device.getAddress());
-//
-//            return view;
-//        }
-//    }
-
-//    @Override
-//    protected void onListItemClick(ListView l, View v, int position, long id) {
-//        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-//        if (device == null) return;
-//        final Intent intent = new Intent(this, DisplayEmoticonActivity.class);
-//        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_NAME, device.getName());
-//        intent.putExtra(DisplayEmoticonActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-//        if (mScanning) {
-//            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-//            mScanning = false;
-//        }
-//        startActivity(intent);
-//    }
 }

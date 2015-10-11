@@ -3,14 +3,15 @@
     android:screenOrientation="landscape"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:id="@+id/normal_face"
+    android:id="@+id/dial2"
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true">
 
     <ImageView
-        android:src="@drawable/normal_face"
+        android:src="@drawable/dial2"
         android:scaleType="centerCrop"
         android:layout_height="fill_parent"
-        android:layout_width="fill_parent"/>
+        android:layout_width="fill_parent"
+        android:contentDescription="fatigue level: awake"/>
 </FrameLayout>
