@@ -232,9 +232,9 @@ public class BluetoothLeService extends Service {
         }
 
         Log.d(TAG, "onGetDescriptor" + device.getAddress());
-        // We want to automatically connect to the device, so we are setting the autoConnect
-        // parameter to true.
-        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
+        // We don't want to automatically connect to the device, so we are setting the autoConnect
+        // parameter to false.
+        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.22222");
         mBluetoothDeviceAddress = address;
         Log.d(TAG, "address22222" + mBluetoothDeviceAddress);
@@ -297,8 +297,10 @@ public class BluetoothLeService extends Service {
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+        Log.d(TAG, "setCharacteristic Notification called");
 
         if (UUID_FATIGUE_LEVEL.equals(characteristic.getUuid())) {
+            Log.d(TAG, "writingDescriptor 22222");
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     UUID.fromString(SampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);

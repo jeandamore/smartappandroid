@@ -6,7 +6,7 @@
     android:id="@+id/tired_face">
 
     <ImageView
-        android:src="@drawable/tired_face1"
+        android:src="@drawable/tired_face"
         android:scaleType="centerCrop"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"/>

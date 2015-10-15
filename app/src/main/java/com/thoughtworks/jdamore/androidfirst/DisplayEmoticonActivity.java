@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Typeface;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -18,7 +17,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -45,9 +43,6 @@ public class DisplayEmoticonActivity extends Activity {
     public static FrameLayout currentLayout;
     public static RelativeLayout connectingLayout;
 
-//    private ImageView incrementingBoxView;
-//    private AnimationDrawable myAnimationDrawable;
-
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
 
@@ -59,7 +54,7 @@ public class DisplayEmoticonActivity extends Activity {
                 finish();
             }
             // Automatically connects to the device upon successful start-up initialization.
-            Log.d(TAG, "42940236 onServiceConnected");
+            Log.d(TAG, "22222 onServiceConnected");
             mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "22222 mBluetoothLeService.connect");
         }
@@ -67,6 +62,7 @@ public class DisplayEmoticonActivity extends Activity {
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
             mBluetoothLeService.disconnect();
+            Log.d(TAG, "22222 mBluetoothLeService.disconnect");
             mBluetoothLeService = null;
             finish();
         }
@@ -94,6 +90,7 @@ public class DisplayEmoticonActivity extends Activity {
                 setGattServices(mBluetoothLeService.getSupportedGattServices());
                 readFatigueLevelCharacteristic();
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                Log.d(TAG, "22222 ACTION_DATA_AVAILABLE");
                 setView(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
@@ -129,8 +126,8 @@ public class DisplayEmoticonActivity extends Activity {
 
         Log.d(TAG, "22222 onCreate called");
 
-        setContentView(R.layout.connecting);
-        connectingLayout = (RelativeLayout) findViewById(R.id.connecting);
+        setContentView(R.layout.connecting2);
+        connectingLayout = (RelativeLayout) findViewById(R.id.connecting2);
         setOnTouchListenerForLayout(connectingLayout);
 
         Typeface futuraFont = Typeface.createFromAsset(getAssets(),
@@ -141,10 +138,6 @@ public class DisplayEmoticonActivity extends Activity {
         TextView connectingText = (TextView) findViewById(R.id.connectingText);
         smartCapTextView.setTypeface(futuraFont);
         connectingText.setTypeface(myriadFont);
-
-//        incrementingBoxView = (ImageView) findViewById(R.id.incrementingBoxView);
-//        incrementingBoxView.setVisibility(View.VISIBLE);
-//        incrementalHorizontalLoading();
 
         final Intent intent = getIntent();
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
@@ -342,10 +335,4 @@ public class DisplayEmoticonActivity extends Activity {
             }
         });
     }
-
-//    public void incrementalHorizontalLoading() {
-//        myAnimationDrawable = (AnimationDrawable) incrementingBoxView.getDrawable();
-//
-//        myAnimationDrawable.start();
-//    }
 }
