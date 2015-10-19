@@ -61,7 +61,7 @@ public class DisplayEmoticonActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
-            mBluetoothLeService.disconnect();
+            //mBluetoothLeService.disconnect();
             Log.d(TAG, "22222 mBluetoothLeService.disconnect");
             mBluetoothLeService = null;
             finish();
@@ -82,6 +82,8 @@ public class DisplayEmoticonActivity extends Activity {
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                Log.d(TAG, "22222 ACTION_GATT_DISCONNECTED");
+
                 finish();
                 mConnected = false;
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
@@ -172,7 +174,7 @@ public class DisplayEmoticonActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "22222 onDestroy called + unbindService mBluetoothLeService = null");
+        Log.d(TAG, "22222 onDestroy close called + unbindService mBluetoothLeService = null");
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
     }

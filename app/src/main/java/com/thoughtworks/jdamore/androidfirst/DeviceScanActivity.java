@@ -91,13 +91,6 @@ public class DeviceScanActivity extends Activity {
         smartCapTextView.setTypeface(futuraFont);
         connectingText.setTypeface(myriadFont);
 
-        // Use this check to determine whether BLE is supported on the device.  Then you can
-        // selectively disable BLE-related features.
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, R.string.ble_not_supported, Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
         final BluetoothManager bluetoothManager =
@@ -114,18 +107,12 @@ public class DeviceScanActivity extends Activity {
         fatigueMonitorUUIDString = SampleGattAttributes.FATIGUE_LEVEL_SERVICE;
         serviceUUIDs = new ArrayList<>();
         serviceUUIDs.add(fatigueMonitorUUIDString);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        // Ensures Bluetooth is enabled on the device.  If Bluetooth is not currently enabled,
-        // fire an intent to display a dialog asking the user to grant permission to enable it.
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            //alert device doesn't support bluetooth
-        }
         if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
