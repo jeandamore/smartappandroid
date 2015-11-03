@@ -181,7 +181,6 @@ public class DeviceScanActivity extends Activity {
                         Log.d(TAG, "22222 mLeDevices.add(device)");
                         mLeDevices.clear();
                         mLeDevices.add(device);
-
                         connectToFatigueDevice();
                     }
                 });
@@ -228,6 +227,7 @@ public class DeviceScanActivity extends Activity {
 
         //start scan
         boolean success = mBluetoothAdapter.startLeScan(uuidFilters, mLeScanCallback);
+//        boolean success = mBluetoothAdapter.startLeScan(mLeScanCallback);
 
         //check scan success
         if(!success) {

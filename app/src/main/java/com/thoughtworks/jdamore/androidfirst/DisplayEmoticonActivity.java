@@ -102,7 +102,6 @@ public class DisplayEmoticonActivity extends Activity {
         if (mGattCharacteristics != null) {
             // Connects to the Fatigue Service characteristic.
             final BluetoothGattCharacteristic characteristic = getGattCharacteristic(SampleGattAttributes.FATIGUE_LEVEL, mGattCharacteristics);
-
             final int charaProp = characteristic.getProperties();
             if ((charaProp & BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                 // If there is an active notification on a characteristic, clear

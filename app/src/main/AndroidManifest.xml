@@ -22,10 +22,10 @@
             android:name=".ConnectActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".DeviceScanActivity"
@@ -37,6 +37,23 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar"/>
         <service android:name=".BluetoothLeService" android:enabled="true"/>
+
+
+        <!-- Bluetooth 2 Application -->
+        <activity
+            android:name="com.thoughtworks.jdamore.bluetoothchat.BasicHeadwareScreen"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.thoughtworks.jdamore.bluetoothchat.FatigueScreen"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/fatigue_screen" />
     </application>
 
 </manifest>
