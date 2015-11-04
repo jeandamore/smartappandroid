@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thoughtworks.jdamore.bluetoothchat;
+package com.thoughtworks.jdamore.bluetooth2;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thoughtworks.jdamore.androidfirst"
+    package="com.thoughtworks.jdamore.bluetooth4LE"
     android:versionCode="1"
     android:versionName="1.0">
     <!-- Declare this required feature if you want to make the app available to BLE-capable
@@ -22,39 +22,39 @@
 
         <!-- Bluetooth 4 LE Application -->
         <activity
-            android:name=".ConnectActivity"
+            android:name="com.thoughtworks.jdamore.bluetooth4LE.ConnectActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".DeviceScanActivity"
+            android:name="com.thoughtworks.jdamore.bluetooth4LE.DeviceScanActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar" />
         <activity
-            android:name=".DisplayEmoticonActivity"
+            android:name="com.thoughtworks.jdamore.bluetooth4LE.DisplayEmoticonActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar"/>
-        <service android:name=".BluetoothLeService" android:enabled="true"/>
+        <service android:name="com.thoughtworks.jdamore.bluetooth4LE.BluetoothLeService" android:enabled="true"/>
 
 
         <!-- Bluetooth 2 Application -->
         <activity
-            android:name="com.thoughtworks.jdamore.bluetoothchat.BasicHeadwareScreen"
+            android:name="com.thoughtworks.jdamore.bluetooth2.BasicHeadwareScreen"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity
-            android:name="com.thoughtworks.jdamore.bluetoothchat.FatigueScreen"
+            android:name="com.thoughtworks.jdamore.bluetooth2.FatigueScreen"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/fatigue_screen" />
     </application>

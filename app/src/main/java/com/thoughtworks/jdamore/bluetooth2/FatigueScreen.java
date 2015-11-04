@@ -1,4 +1,4 @@
-package com.thoughtworks.jdamore.bluetoothchat;
+package com.thoughtworks.jdamore.bluetooth2;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -15,7 +15,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.thoughtworks.jdamore.androidfirst.R;
+import com.thoughtworks.jdamore.bluetooth4LE.R;
 import com.thoughtworks.jdamore.common.logger.Log;
 
 public class FatigueScreen extends Activity {

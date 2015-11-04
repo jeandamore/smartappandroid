@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.thoughtworks.jdamore.androidfirst;
+package com.thoughtworks.jdamore.bluetooth4LE;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * This class includes a small subset of standard GATT attributes for demonstration purposes.

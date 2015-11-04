@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thoughtworks.jdamore.androidfirst;
+package com.thoughtworks.jdamore.bluetooth4LE;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;

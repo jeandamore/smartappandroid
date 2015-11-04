@@ -1,4 +1,4 @@
-package com.thoughtworks.jdamore.androidfirst;
+package com.thoughtworks.jdamore.bluetooth4LE;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;

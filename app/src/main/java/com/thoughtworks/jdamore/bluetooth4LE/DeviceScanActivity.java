@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.thoughtworks.jdamore.androidfirst;
+package com.thoughtworks.jdamore.bluetooth4LE;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -28,7 +28,6 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
