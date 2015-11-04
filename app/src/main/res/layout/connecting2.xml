@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:background="#007eff">
+    android:background="#b90014">
 
     <TextView
         android:layout_width="wrap_content"

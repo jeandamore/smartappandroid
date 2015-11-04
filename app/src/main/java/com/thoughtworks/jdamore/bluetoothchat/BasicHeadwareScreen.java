@@ -40,8 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thoughtworks.jdamore.androidfirst.R;
-
-import com.thoughtworks.jdamore.common.activities.SampleActivityBase;
 import com.thoughtworks.jdamore.common.logger.Log;
 
 import java.util.Set;
@@ -53,17 +51,11 @@ import java.util.Set;
  * For devices with displays with a width of 720dp or greater, the sample log is always visible,
  * on other devices it's visibility is controlled by an item on the Action Bar.
  */
-public class BasicHeadwareScreen extends SampleActivityBase {
+public class BasicHeadwareScreen extends Activity {
 
     public static final String TAG = "BasicHeadwareScreen";
 
-    // Whether the Log Fragment is currently shown
-    private boolean mLogShown;
-
-    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
-
-    private String mDeviceAddress = "device_address";
 
     /**
      * Name of the connected device
@@ -76,12 +68,6 @@ public class BasicHeadwareScreen extends SampleActivityBase {
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
     /**
-     * Array adapter for the conversation thread
-     */
-    private ArrayAdapter<String> mConversationArrayAdapter;
-
-
-    /**
      * Local Bluetooth adapter
      */
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -89,23 +75,14 @@ public class BasicHeadwareScreen extends SampleActivityBase {
     /**
      * Member object for the chat services
      */
-    private BluetoothService mChatService = null;
+    private BluetoothService mBluetoothService = null;
 
     // Intent request codes
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
-    private static final int REQUEST_ENABLE_BT = 3;
+    private static final int REQUEST_ENABLE_BT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        if (savedInstanceState == null) {
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//            //BluetoothChatFragment fragment = new BluetoothChatFragment();
-//            //transaction.replace(R.id.sample_content_fragment, fragment);
-//            transaction.commit();
-//        }
 
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -136,8 +113,8 @@ public class BasicHeadwareScreen extends SampleActivityBase {
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
         ArrayAdapter<String> pairedDevicesArrayAdapter =
-                new ArrayAdapter<String>(this, R.layout.device_name2);
-        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name2);
+                new ArrayAdapter<String>(this, R.layout.device_name);
+        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
 
         // Find and set up the ListView for paired devices
         ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
@@ -179,22 +156,9 @@ public class BasicHeadwareScreen extends SampleActivityBase {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-//        MenuItem logToggle = menu.findItem(R.id.menu_toggle_log);
-//        logToggle.setVisible(findViewById(R.id.sample_output) instanceof ViewAnimator);
-//        logToggle.setTitle(mLogShown ? R.string.sample_hide_log : R.string.sample_show_log);
-
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.secure_connect_scan: {
-                // Launch the DeviceListActivity to see devices and do scan
-                //Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-                //startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-                //doDiscovery();
+            case R.id.house: {
                 return true;
             }
             case R.id.discoverable: {
@@ -218,8 +182,8 @@ public class BasicHeadwareScreen extends SampleActivityBase {
         // Unregister broadcast listeners
         this.unregisterReceiver(mReceiver);
 
-        if (mChatService != null) {
-            mChatService.stop();
+        if (mBluetoothService != null) {
+            mBluetoothService.stop();
         }
     }
 
@@ -258,20 +222,13 @@ public class BasicHeadwareScreen extends SampleActivityBase {
             String info = ((TextView) v).getText().toString();
             String address = info.substring(info.length() - 17);
 
-            Log.d(TAG, "info1114" + info);
-            Log.d(TAG, "address1114" + address);
-
             // Create the result Intent and include the MAC address
-//            Intent intent = new Intent();
-//            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
             final Intent intent = new Intent(getApplicationContext(), FatigueScreen.class);
-            intent.putExtra(FatigueScreen.EXTRAS_DEVICE_NAME, info);
             intent.putExtra(FatigueScreen.EXTRAS_DEVICE_ADDRESS, address);
 
             // Set result and finish this Activity
             setResult(Activity.RESULT_OK, intent);
             startActivity(intent);
-            //finish();
         }
     };
 
@@ -327,7 +284,6 @@ public class BasicHeadwareScreen extends SampleActivityBase {
                     switch (msg.arg1) {
                         case BluetoothService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
-                            mConversationArrayAdapter.clear();
                             break;
                         case BluetoothService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
@@ -342,13 +298,11 @@ public class BasicHeadwareScreen extends SampleActivityBase {
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
                     String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -366,23 +320,16 @@ public class BasicHeadwareScreen extends SampleActivityBase {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUEST_CONNECT_DEVICE_SECURE:
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    //connectDevice(data, true);
-                }
-                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
                     // Bluetooth is now enabled, so set up a chat session
-                    setupChat();
+                    setupBluetoothService();
                 } else {
                     // User did not enable Bluetooth or an error occurred
                     Log.d(TAG, "BT not enabled");
                     Toast.makeText(this, R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
-                    //finish();
                 }
         }
     }
@@ -394,11 +341,11 @@ public class BasicHeadwareScreen extends SampleActivityBase {
         // Performing this check in onResume() covers the case in which BT was
         // not enabled during onStart(), so we were paused to enable it...
         // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (mChatService != null) {
+        if (mBluetoothService != null) {
             // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (mChatService.getState() == BluetoothService.STATE_NONE) {
+            if (mBluetoothService.getState() == BluetoothService.STATE_NONE) {
                 // Start the Bluetooth chat services
-                mChatService.start();
+                mBluetoothService.start();
             }
         }
     }
@@ -406,9 +353,9 @@ public class BasicHeadwareScreen extends SampleActivityBase {
     /**
      * Set up the UI and background operations for chat.
      */
-    private void setupChat() {
+    private void setupBluetoothService() {
         // Initialize the BluetoothService to perform bluetooth connections
-        mChatService = new BluetoothService(this, mHandler);
+        mBluetoothService = new BluetoothService(this, mHandler);
     }
 
     /**
@@ -436,24 +383,4 @@ public class BasicHeadwareScreen extends SampleActivityBase {
         }
         actionBar.setSubtitle(subTitle);
     }
-
-    /** Create a chain of targets that will receive log data */
-//    @Override
-//    public void initializeLogging() {
-//        // Wraps Android's native log framework.
-//        LogWrapper logWrapper = new LogWrapper();
-//        // Using Log, front-end to the logging chain, emulates android.util.log method signatures.
-//        Log.setLogNode(logWrapper);
-//
-//        // Filter strips out everything except the message text.
-//        MessageOnlyLogFilter msgFilter = new MessageOnlyLogFilter();
-//        logWrapper.setNext(msgFilter);
-//
-//        // On screen logging via a fragment with a TextView.
-//        LogFragment logFragment = (LogFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.log_fragment);
-//        msgFilter.setNext(logFragment.getLogView());
-//
-//        Log.i(TAG, "Ready");
-//    }
 }

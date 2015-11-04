@@ -9,35 +9,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thoughtworks.jdamore.androidfirst.R;
 import com.thoughtworks.jdamore.common.logger.Log;
 
-/**
- * Created by Sarah on 28/10/15.
- */
 public class FatigueScreen extends Activity {
 
     private static final String TAG = "FatigueScreen";
 
-    public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
 
     // Intent request codes
-    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
-    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
-    private static final int REQUEST_ENABLE_BT = 3;
+    private static final int REQUEST_ENABLE_BT = 1;
 
     // Layout Views
-    private TextView mHeadwareAddress;
+    private TextView mHeadwareName;
     private TextView mFatigueLevel;
     private TextView mHeadwareAddressText;
 
@@ -45,11 +36,6 @@ public class FatigueScreen extends Activity {
      * Name of the connected device
      */
     private String mConnectedDeviceName = null;
-
-    /**
-     * Array adapter for the conversation thread
-     */
-    private ArrayAdapter<String> mConversationArrayAdapter;
 
     /**
      * String buffer for outgoing messages
@@ -122,29 +108,11 @@ public class FatigueScreen extends Activity {
     }
 
     private void setupFatigueDisplay() {
-        Log.d(TAG, "setUpFatigueDisplayCalled1114");
-        // Initialize the array adapter for the conversation thread
-//        mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message2);
         mFatigueLevel = (TextView) findViewById(R.id.fatigue_level);
-
-        mHeadwareAddressText = (TextView) findViewById(R.id.headware_address);
-//        mConversationView.setAdapter(mConversationArrayAdapter);
-
-        // Initialize the compose field with a listener for the return key
-//        mHeadwareAddressText.setOnEditorActionListener(mWriteListener);
-
         mFatigueLevel.equals(mOutStringBuffer);
 
-
-        // Initialize the send button with a listener that for click events
-//        mSendButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Send a message using content of the edit text widget
-//                TextView textView = (TextView) findViewById(R.id.edit_text_out);
-//                String message = textView.getText().toString();
-//                sendMessage(message);
-//            }
-//        });
+        mHeadwareAddressText = (TextView) findViewById(R.id.headware_address);
+        mHeadwareName = (TextView) findViewById(R.id.headware_name);
 
         // Initialize the BluetoothService to perform bluetooth connections
         mBluetoothService = new BluetoothService(this, mHandler);
@@ -187,7 +155,6 @@ public class FatigueScreen extends Activity {
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
-//            mHeadwareAddressText.setText(mOutStringBuffer);
         }
     }
 
@@ -244,7 +211,7 @@ public class FatigueScreen extends Activity {
                         case BluetoothService.STATE_CONNECTED:
                             setStatus(getString(R.string.title_connected_to, mConnectedDeviceName));
                             //mConversationArrayAdapter.clear();
-                            mFatigueLevel.setText("");
+                            mFatigueLevel.setText("Fatigue level: ");
                             break;
                         case BluetoothService.STATE_CONNECTING:
                             setStatus(R.string.title_connecting);
@@ -258,15 +225,14 @@ public class FatigueScreen extends Activity {
                 case Constants.MESSAGE_WRITE:
                     byte[] writeBuf = (byte[]) msg.obj;
                     // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
+//                    String writeMessage = new String(writeBuf);
 //                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ:
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
-//                    mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
-                    mFatigueLevel.setText(readMessage);
+                    mFatigueLevel.setText("Fatigue level: " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
                     // save the connected device's name
@@ -284,24 +250,11 @@ public class FatigueScreen extends Activity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d(TAG, "onActivityResult1114");
         switch (requestCode) {
-            case REQUEST_CONNECT_DEVICE_SECURE:
-                // When DeviceListActivity returns with a device to connect
-                if (resultCode == Activity.RESULT_OK) {
-                    connectDevice(data, true);
-                }
-                break;
-//            case REQUEST_CONNECT_DEVICE_INSECURE:
-//                // When DeviceListActivity returns with a device to connect
-//                if (resultCode == Activity.RESULT_OK) {
-//                    connectDevice(data, false);
-//                }
-//                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if (resultCode == Activity.RESULT_OK) {
-                    // Bluetooth is now enabled, so set up a chat session
+                    // Bluetooth is now enabled, so set up fatigue display
                     setupFatigueDisplay();
                 } else {
                     // User did not enable Bluetooth or an error occurred
@@ -316,7 +269,7 @@ public class FatigueScreen extends Activity {
     /**
      * Establish connection with other device
      *
-     * @param data   An {@link Intent} with {@link DeviceListActivity#EXTRA_DEVICE_ADDRESS} extra.
+     * @param data   An {@link Intent} with {@link BasicHeadwareScreen#EXTRAS_DEVICE_ADDRESS} extra.
      * @param secure Socket Security type - Secure (true) , Insecure (false)
      */
     private void connectDevice(Intent data, boolean secure) {
@@ -326,31 +279,23 @@ public class FatigueScreen extends Activity {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         // Attempt to connect to the device
         mBluetoothService.connect(device, secure);
-        mHeadwareAddressText.setText(device.getAddress());
+        mHeadwareName.setText("Headware name: " + device.getName());
+        mHeadwareAddressText.setText("Headware address: " + address);
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.connect_menu, menu);
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.connect_menu, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.secure_connect_scan: {
-                // Launch the DeviceListActivity to see devices and do scan
-//                Intent serverIntent = new Intent(this, BasicHeadwareScreen.class);
-//                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
-
-                //return to basic screen
+            case R.id.house: {
+                finish();
                 return true;
             }
-//            case R.id.insecure_connect_scan: {
-//                // Launch the DeviceListActivity to see devices and do scan
-//                //Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-//                //startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
-//                return true;
-//            }
             case R.id.discoverable: {
                 // Ensure this device is discoverable by others
                 ensureDiscoverable();
@@ -359,48 +304,4 @@ public class FatigueScreen extends Activity {
         }
         return false;
     }
-
-    /**
-     * Set up the UI and background operations for chat.
-     */
-//    private void setupChat() {
-//        Log.d(TAG, "setupChat()");
-//
-//        // Initialize the array adapter for the conversation thread
-//        mConversationArrayAdapter = new ArrayAdapter<String>(this, R.layout.message2);
-//
-//        mConversationView.setAdapter(mConversationArrayAdapter);
-//
-//        // Initialize the compose field with a listener for the return key
-//        mHeadwareAddressText.setOnEditorActionListener(mWriteListener);
-//
-//        // Initialize the send button with a listener that for click events
-//        mSendButton.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                // Send a message using content of the edit text widget
-//                TextView textView = (TextView) findViewById(R.id.edit_text_out);
-//                String message = textView.getText().toString();
-//                sendMessage(message);
-//            }
-//        });
-//
-//        // Initialize the BluetoothService to perform bluetooth connections
-//        mBluetoothService = new BluetoothService(this, mHandler);
-//
-//        // Initialize the buffer for outgoing messages
-//        mOutStringBuffer = new StringBuffer("");
-//    }
-
-    //    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-//                             @Nullable Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_bluetooth_chat2, container, false);
-//    }
-
-//    @Override
-//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        mConversationView = (ListView) view.findViewById(R.id.in);
-//        mHeadwareAddressText = (EditText) view.findViewById(R.id.edit_text_out);
-//        mSendButton = (Button) view.findViewById(R.id.button_send);
-//    }
 }

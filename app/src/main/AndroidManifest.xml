@@ -18,6 +18,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light">
+
+
+        <!-- Bluetooth 4 LE Application -->
         <activity
             android:name=".ConnectActivity"
             android:screenOrientation="landscape"
